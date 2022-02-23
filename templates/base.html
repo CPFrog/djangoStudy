@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- 필수 meta 태그 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- 부트스트랩 CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+    <!-- pybo CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <title>기본 템플릿</title>
+</head>
+<body>
+    <!-- 기본 템플릿에 포함될 내용이 삽입되는 구간 시작지점-->
+    {% block content %}
+    {% endblock %}
+    <!-- 기본 템플릿에 포함될 내용이 삽입되는 구간 끝 지점-->
+</body>
+</html>

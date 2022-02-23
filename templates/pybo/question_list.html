@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>질문 목록</title>
-</head>
-<body>
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-3">
     <table class="table">
         <thead>
         <tr class="thead-dark">
@@ -35,5 +29,5 @@
         {% endif %}
         </tbody>
     </table>
-</body>
-</html>
+</div>
+{% endblock %}

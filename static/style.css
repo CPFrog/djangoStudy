@@ -1,7 +1,9 @@
-textarea {
-    width: 100%;
-}
+/*textarea {*/
+/*    width: 100%;*/
+/*}*/
 
-input[type=submit] {
-    margin-top: 10px;
-}
+/*input[type=submit] {*/
+/*    margin-top: 10px;*/
+/*}*/
+
+/* 2.9장에서 base.html을 이용해 부트스트랩을 사용하게 됨에 따라 이 파일 내용 필요 없게됨 */
