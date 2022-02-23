@@ -2,14 +2,21 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Question
 from django.utils import timezone
 from .forms import QuestionForm, AnswerForm
+from django.core.paginator import Paginator
 
 
 def index(request):
     """
     pybo 목록 출력
     """
-    question_list = Question.objects.order_by('-create_date')
-    context = {'question_list': question_list}
+    page = request.GET.get('page', '1')  # 최초 페이지 번호
+
+    question_list = Question.objects.order_by('-create_date')  # 최근 작성일 순으로 게시글 정렬
+
+    # 게시판 페이징 처리
+    paginator = Paginator(question_list, 10)  # 10개 단위로 페이지 나누기 위한 코드
+    page_obj = paginator.get_page(page)
+    context = {'question_list': page_obj}  # 게시글들 목록이 담긴 리스트
     return render(request, 'pybo/question_list.html', context)
 
 
