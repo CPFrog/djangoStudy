@@ -12,9 +12,15 @@
     <title>기본 템플릿</title>
 </head>
 <body>
-    <!-- 기본 템플릿에 포함될 내용이 삽입되는 구간 시작지점-->
+    <!-- 네비게이션 바 템플릿 파일 포함시키는 코드 -->
+    {% include 'navbar.html' %}
+    <!-- 기본 템플릿에 포함될 내용이 삽입되는 구간 시작 지점-->
     {% block content %}
     {% endblock %}
     <!-- 기본 템플릿에 포함될 내용이 삽입되는 구간 끝 지점-->
+<!-- jQuery JS 포함시키는 코드 -->
+<script src="{% static 'jQuery-3.6.0.min.js' %}"></script>
+<!-- 부트스트랩 JS 포함시키는 코드-->
+<script src="{% static 'bootstrap.min.js' %}"></script>
 </body>
 </html>

@@ -19,7 +19,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#@k%!xcfvkwdb+vz$fy7=&bp#m*19(&9w4a!g$macid+!10o12'
+SECRET_KEY = 'django-insecure-#@k%!xcfvkwdb+vz$fy7=&bp#m*19(&9w4a!g$macid+!10o12'  # 장고 공부 끝나고 이 키 값 바꿔야함
+# Discord 봇 개발때처럼 고유 토큰값을 누구나 접근 가능한 사이트에 노출 금지 정책 미준수
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
