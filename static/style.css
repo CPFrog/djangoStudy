@@ -6,4 +6,10 @@
 /*    margin-top: 10px;*/
 /*}*/
 
-/* 2.9장에서 base.html을 이용해 부트스트랩을 사용하게 됨에 따라 이 파일 내용 필요 없게됨 */
+/* 2.9장에서 base.html을 이용해 부트스트랩을 사용하게 됨에 따라 위쪽의 코드 필요 없게됨 */
+
+/* 댓글에 적용할 스타일 시트 */
+.comment{
+    border-top:dotted 1px #ddd;
+    font-size:0.7em;
+}
