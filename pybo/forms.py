@@ -1,5 +1,5 @@
 from django import forms
-from pybo.models import Question, Answer
+from pybo.models import Question, Answer, Comment
 
 
 class QuestionForm(forms.ModelForm):
@@ -19,10 +19,21 @@ class QuestionForm(forms.ModelForm):
         }
 
 
+# 답변 작성에 대한 양식 생성 코드
 class AnswerForm(forms.ModelForm):
     class Meta:
         model = Answer
         fields = ['content']
         labels = {
-            'content': '답변 내용',
+            'content': '답변 내용',  # 내용 라벨을 한국어로 보이게 하기 위한 코드
+        }
+
+
+# 댓글 작성 양식 생성 코드
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        labels = {
+            'content': '댓글 내용'  # 내용 라벨을 한국어로 보이게 하기 위한 코드
         }
