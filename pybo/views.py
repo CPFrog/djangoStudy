@@ -8,12 +8,10 @@ from django.contrib import messages
 
 
 def index(request):
-    """
-    pybo 목록 출력
-    """
+    """ pybo 목록 출력 """
     page = request.GET.get('page', '1')  # 최초 페이지 번호
 
-    question_list = Question.objects.order_by('-create_date')  # 최근 작성일 순으로 게시글 정렬
+    question_list = Question.objects.order_by('-create_date')  # 최근 작성일 순으로 게시글 정렬하기 위해 - 붙임
 
     # 게시판 페이징 처리
     paginator = Paginator(question_list, 10)  # 10개 단위로 페이지 나누기 위한 코드
@@ -23,9 +21,7 @@ def index(request):
 
 
 def detail(request, question_id):
-    """
-    pybo 내용 출력
-    """
+    """ pybo 내용 출력 """
     question = get_object_or_404(Question, pk=question_id)
     context = {'question': question}
     return render(request, 'pybo/question_detail.html', context)
@@ -33,7 +29,7 @@ def detail(request, question_id):
 
 @login_required(login_url='common:login')
 def question_create(request):
-    """pybo 질문 등록"""
+    """ pybo 질문 등록 """
     # 질문 등록의 경우 get인 경우 질문 작성 양식만 가져오고, post인 경우 데이터가 저장되어야 하므로 각각에 대한 처리.
     if request.method == 'POST':  # 웹 페이지 요청 방식이 post인 경우 화면에서 전달받은 데이터로 양식 값이 채워지도록 설정.
         form = QuestionForm(request.POST)
@@ -72,7 +68,7 @@ def question_modify(request, question_id):
 
 
 def question_delete(request, question_id):
-    """게시글 삭제"""
+    """ 게시글 삭제 """
     question = get_object_or_404(Question, pk=question_id)
     if request.user != question.author:
         messages.error(request, '게시글 관리 권한이 없습니다.')
@@ -83,9 +79,7 @@ def question_delete(request, question_id):
 
 @login_required(login_url='common:login')
 def answer_create(request, question_id):
-    """
-    pybo 답변 등록
-    """
+    """ pybo 답변 등록 """
     # question과 코드는 유사. 차이점이라면 답변의 경우 질문에 종속되는 부가적인 정보이므로 질문에 대한 정보 필요.
     question = get_object_or_404(Question, pk=question_id)  # 질문에 대한 정보 가져옴. 없을경우 처리불가(404 에러)
     if request.method == 'POST':
@@ -99,7 +93,7 @@ def answer_create(request, question_id):
             return redirect('pybo:detail', question_id=question.id)
     else:
         form = AnswerForm()
-        context = {'question': question, 'form': form}
+    context = {'question': question, 'form': form}
     return render(request, 'pybo/question_detail.html', context)
 
 
@@ -139,7 +133,7 @@ def answer_delete(request, answer_id):
 
 @login_required(login_url='common:login')
 def comment_create_question(request, question_id):
-    """질문 게시글에 댓글 작성"""
+    """ 질문 게시글에 댓글 작성 """
     question = get_object_or_404(Question, pk=question_id)
     if request.method == 'POST':
         form = CommentForm(request.POST)
@@ -158,7 +152,7 @@ def comment_create_question(request, question_id):
 
 @login_required(login_url='common:login')
 def comment_modify_question(request, comment_id):
-    """질문 게시글에 달려있는 댓글 수정"""
+    """ 질문 게시글에 달려있는 댓글 수정 """
     comment = get_object_or_404(Comment, pk=comment_id)
     if request.user != comment.author:
         messages.error(request, '댓글 수정 권한이 없습니다.')
@@ -181,7 +175,7 @@ def comment_modify_question(request, comment_id):
 
 @login_required(login_url='common:login')
 def comment_delete_question(request, comment_id):
-    """질문 게시글의 댓글 삭제"""
+    """ 질문 게시글의 댓글 삭제 """
     comment = get_object_or_404(Comment, pk=comment_id)
     if request.user != comment.author:
         messages.error(request, '댓글 삭제 권한이 없습니다.')
@@ -190,3 +184,56 @@ def comment_delete_question(request, comment_id):
         comment.delete()
 
     return redirect('pybo:detail', question_id=comment.question.id)
+
+
+@login_required(login_url='common:login')
+def comment_create_answer(request, answer_id):
+    """ 답변 게시글에 댓글 생성 """
+    answer = get_object_or_404(Answer, pk=answer_id)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.create_date = timezone.now()
+            comment.answer = answer
+            comment.save()
+            return redirect('pybo:detail', question_id=comment.answer.question.id)
+    else:
+        form = CommentForm()
+    context = {'form': form}
+    return render(request, 'pybo/comment_form.html', context)
+
+
+@login_required(login_url='common:login')
+def comment_modify_answer(request, comment_id):
+    """ 답변 게시글에 달린 댓글 수정 """
+    comment = get_object_or_404(Comment, pk=comment_id)
+    if request.user != comment.author:
+        messages.error(request, '댓글 수정 권한이 없습니다.')
+        return redirect('pybo:detail', question_id=comment.answer.question.id)
+
+    if request.method == "POST":
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.modify_date = timezone.now()
+            comment.save()
+            return redirect('pybo:detail', question_id=comment.answer.question.id)
+    else:
+        form = CommentForm(instance=comment)
+    context = {'form': form}
+    return render(request, 'pybo/comment_form.html', context)
+
+
+@login_required(login_url='common:login')
+def comment_delete_answer(request, comment_id):
+    """ 답변 게시글에 달린 댓글 삭제 """
+    comment = get_object_or_404(Comment, pk=comment_id)
+    if request.user != comment.author:
+        messages.error(request, '댓글 삭제 권한이 없습니다.')
+        return redirect('pybo:detail', question_id=comment.answer.question.id)
+    else:
+        comment.delete()
+    return redirect('pybo:detail', question_id=comment.answer.question.id)
