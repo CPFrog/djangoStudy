@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import base_views, question_views, answer_views, comment_views
+from .views import base_views, question_views, answer_views, comment_views, vote_views
+
 # 3-11장에서 views.py를 각 게시글 종류에 따라 역할을 담당하는 여러개의 *_views.py 파일로 나눔에 따라 참조 위치도 바뀜.
 
 app_name = 'pybo'
@@ -29,4 +30,8 @@ urlpatterns = [
     path('comment/create/answer/<int:answer_id>/', comment_views.comment_create_answer, name='comment_create_answer'),
     path('comment/modify/answer/<int:comment_id>/', comment_views.comment_modify_answer, name='comment_modify_answer'),
     path('comment/delete/answer/<int:comment_id>/', comment_views.comment_delete_answer, name='comment_delete_answer'),
+
+    # views -> vote_views : 게시글 추천 관련
+    path('vote/question/<int:question_id>/', vote_views.vote_question, name='vote_question'),
+    path('vote/answer/<int:answer_id>/', vote_views.vote_answer, name='vote_answer'),
 ]

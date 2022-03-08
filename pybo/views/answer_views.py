@@ -61,4 +61,3 @@ def answer_delete(request, answer_id):
     return redirect('pybo:detail', question_id=answer.question.id)
 
 
-
