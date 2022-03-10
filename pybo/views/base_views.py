@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, Count
 
 from ..models import Question
 
@@ -9,8 +9,20 @@ def index(request):
     """ pybo 목록 출력 """
     page = request.GET.get('page', '1')  # 페이지 번호. 최초 번호=1
     kw = request.GET.get('kw', '')  # 검색어, 디폴트 검색어=''
+    sortingorder = request.GET.get('sortingorder', 'recent') # 정렬 기준. 디폴트=최신순
 
-    question_list = Question.objects.order_by('-create_date')  # 최근 작성일 순으로 게시글 정렬하기 위해 - 붙임
+    # 정렬
+    if sortingorder=='recommend': # 추천순
+        question_list=Question.objects.annotate(
+            num_voter=Count('voter')).order_by('-num_voter','-create_date')
+    elif sortingorder=='popular': # 인기순
+        question_list=Question.objects.annotate(num_answer=Count('answer')).order_by('-num_answer','-create_date')
+    else: # 최신순(recent)인 경우
+        question_list=Question.objects.order_by('-create_date')
+    # question_list = Question.objects.order_by('-create_date')  # 최근 작성일 순으로 게시글 정렬하기 위해 - 붙임
+    # 위의 코드는 정렬 옵션이 생김에 따라 마지막 else문에 합병됨.
+
+    # 검색
     if kw:
         question_list = question_list.filter(
             Q(subject__icontains=kw) |  # 제목으로 검색
