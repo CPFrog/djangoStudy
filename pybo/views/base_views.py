@@ -23,6 +23,7 @@ def index(request):
     paginator = Paginator(question_list, 10)  # 10개 단위로 페이지 나누기 위한 코드
     page_obj = paginator.get_page(page)
     context = {'question_list': page_obj, 'page': page, 'kw': kw}  # 게시글들 목록이 담긴 리스트, #3-15 이후 page와 kw 추가
+    # 검색 해본 결과 : 원래 게시글의 번호가 아니라 1번부터 다시 지정됨.
     return render(request, 'pybo/question_list.html', context)
 
 
